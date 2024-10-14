@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\Log;
 use Illuminate\Http\Request;
+use Auth;
 class InvoiceController extends Controller
 {
     public function index(Request $request)

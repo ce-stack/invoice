@@ -21,19 +21,20 @@ Route::get('/', function () {
 
 // Admin-only routes
 Route::middleware(['role:Admin'])->group(function() {
-    Route::resource('invoices', InvoiceController::class)->except(['index', 'edit', 'update']);
+    Route::resource('invoices', InvoiceController::class);
+    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
 });
 
 // Employee-only routes
 Route::middleware(['role:Employee'])->group(function() {
-    Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+   // Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::get('invoices/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
     Route::put('invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
 });
 
 // Routes for authenticated users
 Route::middleware(['auth'])->group(function() {
-    Route::resource('invoices', InvoiceController::class)->except(['index', 'edit', 'update']);
+    //Route::resource('invoices', InvoiceController::class)->except(['index', 'edit', 'update']);
     Route::resource('customers', CustomerController::class);
 });
 

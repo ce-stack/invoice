@@ -40,6 +40,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('invoices.create') }}">Create Invoice</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('invoices.index') }}">All Invoices</a>
+                    </li>
                 @elseif (auth()->check() && auth()->user()->hasRole('Employee'))
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('invoices.index') }}">View Invoices</a>
