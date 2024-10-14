@@ -27,7 +27,7 @@ Route::middleware(['role:Admin'])->group(function() {
 
 // Employee-only routes
 Route::middleware(['role:Employee'])->group(function() {
-   // Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+    Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::get('invoices/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
     Route::put('invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
 });
