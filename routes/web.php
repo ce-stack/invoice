@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Make something great!
 |
 */
 
@@ -19,16 +19,26 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Admin-only routes
 Route::middleware(['role:Admin'])->group(function() {
     Route::resource('invoices', InvoiceController::class)->except(['index', 'edit', 'update']);
 });
+
+// Employee-only routes
 Route::middleware(['role:Employee'])->group(function() {
     Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::get('invoices/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
     Route::put('invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
 });
 
+// Routes for authenticated users
 Route::middleware(['auth'])->group(function() {
-    Route::resource('invoices', InvoiceController::class);
+    Route::resource('invoices', InvoiceController::class)->except(['index', 'edit', 'update']);
     Route::resource('customers', CustomerController::class);
 });
+
+// Authentication routes
+Auth::routes();
+
+// Home route
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
