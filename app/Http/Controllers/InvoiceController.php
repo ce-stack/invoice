@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Log;
 use Illuminate\Http\Request;
@@ -17,7 +18,8 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        return view('invoices.create');
+        $customers = Customer::all();
+        return view('invoices.create' , compact('customers'));
     }
 
     public function store(Request $request)

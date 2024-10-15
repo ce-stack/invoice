@@ -7,12 +7,22 @@ use Illuminate\Http\Request;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, ...$roles)
-    {
-        if (!auth()->check() || !auth()->user()->hasAnyRole($roles)) {
-            abort(403, 'User does not have the right roles.'); // This message indicates that access is denied
-        }
+    public function handle($request, Closure $next, $role)
+{
+    $user = auth()->user();
 
-        return $next($request);
+    if (!$user) {
+        return response()->json(['message' => 'User not authenticated'], 403);
     }
+
+    if (!$user->hasRole($role)) {
+        // Add this line to see the user's roles in the log
+        \Log::info('User roles: ' . json_encode($user->getRoleNames()));
+        
+        return response()->json(['message' => 'User does not have the right roles.'], 403);
+    }
+
+    return $next($request);
+}
+
 }

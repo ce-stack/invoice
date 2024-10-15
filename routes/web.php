@@ -19,17 +19,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Admin-only routes
-Route::middleware(['role:Admin'])->group(function() {
-    Route::resource('invoices', InvoiceController::class);
+// Routes accessible by Admin and Employee
+Route::middleware(['role:Admin|Employee'])->group(function() {
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
 });
 
-// Employee-only routes
-Route::middleware(['role:Employee'])->group(function() {
-    Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
-    Route::get('invoices/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
-    Route::put('invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
+// Admin-only routes for all CRUD operations
+Route::middleware(['role:Admin'])->group(function() {
+    Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
+    Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
+    Route::get('/invoices/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
+    Route::put('/invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
+    Route::delete('/invoices/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
 });
 
 // Routes for authenticated users
