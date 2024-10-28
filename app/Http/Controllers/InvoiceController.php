@@ -60,30 +60,28 @@ class InvoiceController extends Controller
 
         $invoice->update($validated);
 
-        Log::create([
-            'user_id' => auth()->id(),
-            'invoice_id' => $invoice->id,
-            'action' => 'updated',
-            'role' => auth()->user()->getRoleNames()->first(),
-        ]);
+        // Log::create([
+        //     'user_id' => auth()->id(),
+        //     'invoice_id' => $invoice->id,
+        //     'action' => 'updated',
+        //     'role' => auth()->user()->getRoleNames()->first(),
+        // ]);
 
         // Send Email Notification
-        $invoice->customer->notify(new \App\Notifications\InvoiceUpdatedNotification($invoice));
+       // $invoice->customer->notify(new \App\Notifications\InvoiceUpdatedNotification($invoice));
 
-        return redirect()->route('invoices.index');
+        return redirect()->back()->with('message' , 'test');
     }
 
     public function destroy(Invoice $invoice)
     {
+        // Now delete the invoice
         $invoice->delete();
 
-        Log::create([
-            'user_id' => auth()->id(),
-            'invoice_id' => $invoice->id,
-            'action' => 'deleted',
-            'role' => auth()->user()->getRoleNames()->first(),
-        ]);
-
-        return redirect()->route('invoices.index');
+        $invoices = Invoice::with('customer')->paginate(10);
+        $perPage = 10;
+        return view('invoices.index' , compact('invoices' , 'perPage'));
     }
+
+
 }
